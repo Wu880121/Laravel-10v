@@ -141,7 +141,7 @@ nav a{
 {
 	height:100vh;
 	width:60%;
-	background: rgba(212, 201, 190, 1);  /* 半透明白底 */
+	background-color:#EAEFEF;
 	z-index:1000;
 	position:fixed;
 	top:4rem;

@@ -1,0 +1,35 @@
+*
+{
+	margin:0;
+	padding:0;
+	box-sizing:border-box;
+	list-style:none;
+	text-decoration:none;
+}
+
+.profile-cover
+{
+	height:100vh;
+	width:100%;
+	display:flex;
+	flex-direction:column;
+	justify-content:center;
+	align-items:center;
+	background-color:#BF9264;
+}
+
+.profile-container
+{
+	max-width:100%;
+	width:500px;
+	height:600px;
+	background: rgba(212, 201, 190, 0.9);  /* 半透明白底 */
+	border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+	border-radius:10px;
+	display:flex;
+	flex-direction:column;
+	justify-content:center;
+	align-items:center;
+	gap:1.5rem;
+}

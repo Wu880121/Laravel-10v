@@ -6,6 +6,7 @@ import Profile from '../views/Profile.vue'
 import Dashboard from '../views/Dashboard.vue'
 import RegisterVerificationSuccess from '../views/RegisterVerificationSuccess.vue'
 import ResendRegisterVerification from '../views/ResendRegisterVerification.vue'
+import ResetPassword from '../views/ResetPassword.vue'
 
 const routes = [
   { path: '/', name: 'Home', component: Home },
@@ -14,7 +15,8 @@ const routes = [
   { path:'/profile', name:'Profile', component:Profile},
   { path:'/dashboard', name:'Dashboard', component:Dashboard},
   { path:'/register_verify_success', name:'RegisterVerificationSuccess', component:RegisterVerificationSuccess},
-  { path:'/resend_register_verification', name:'ResendRegisterVerification', component:ResendRegisterVerification}
+  { path:'/resend_register_verification', name:'ResendRegisterVerification', component:ResendRegisterVerification},
+  {path:'/reset_password', name:'ResetPassword', component:ResetPassword }
 ]
 
 const router = createRouter({

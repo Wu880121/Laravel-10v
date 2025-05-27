@@ -1,13 +1,20 @@
 <template>
 
-<h1>這是個人資料頁面</h1>
+<div class="profile-cover">
+	
+	<div class="profile-container">
+	
+	</div>
+
+</div>
 
 </template>
 
 <script>
+import "../../css/Profile.css";
 export default{
 	
 	name:'profile',
-
+	
 }
 </script>
