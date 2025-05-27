@@ -1,0 +1,154 @@
+*{
+		margin:0;
+		padding:0;
+		box-sizing:border-box;
+		list-style:none;
+		text-decoration:none;
+}
+
+.template-cover
+{
+    height: 100%;
+}
+
+
+.image-container
+{
+	height:30rem;
+	width:100%;
+	//background-color:yellow;
+	margin-top:2rem;
+	position:relative;
+}
+
+.right-bottom
+{
+	position:absolute;
+	font-size:3rem;
+	top:40%;
+	right:5%;
+	cursor:pointer;
+	transition:0.2s ease;
+}
+
+.right-bottom:hover
+{
+	transform:scale(1.2);
+}
+
+.left-bottom
+{
+	position:absolute;
+	font-size:3rem;
+	top:40%;
+	left:5%;
+	cursor:pointer;
+	transition:0.2s ease;
+}
+
+.left-bottom:hover
+{
+	transform:scale(1.2);
+}
+
+.map-cover
+{
+	width:100%;
+	height:100%;
+	display:flex;
+	justify-content:space-between;
+	flex-wrap:wrap;
+	background-color:#EAEFEF;
+	margin-top:2rem;
+	margin-bottom:2rem;
+}
+
+.map
+{
+	max-width:100%;
+	width:500px;
+	height:350px;
+	//background-color:blue;
+	margin-left:2rem;
+	margin-right:2rem;
+}
+
+
+.information
+{
+	max-width:100%;
+	width:500px;
+	height:350px;
+	//background-color:blue;
+	margin-right:2rem;
+	margin-left:2rem;
+	display:flex;
+	flex-direction:column;
+	justify-content:center;
+	align-items:center;
+	gap:2rem;
+}
+
+.information-content
+{
+	display:flex;
+	gap:0.5rem;
+	align-items:center;
+	justify-content:flex-start;
+	padding-left:30%;
+	width:100%;
+}
+
+
+.slide1
+{
+	  
+	height:30rem;
+	width:100%;
+	background-image:url('/images/dani-ZLqxSzvVr7I-unsplash.jpg');
+	background-position:center;
+	background-size:cover;
+	background-repeat:no-repeat;
+	display:none;
+}
+
+.slide2
+{
+	  
+	height:30rem;
+	width:100%;
+	background-image:url('/images/tim-mossholder-YC6RVdoTtIk-unsplash.jpg');
+	background-position:center;
+	background-size:cover;
+	background-repeat:no-repeat;
+	display:none;
+}
+
+.slide3
+{
+	  
+	height:30rem;
+	width:100%;
+	background-image:url('/images/ian-dooley-DJ7bWa-Gwks-unsplash.jpg');
+	background-position:center;
+	background-size:cover;
+	background-repeat:no-repeat;
+	display:none;
+}
+
+
+.active
+{
+	display:block;
+}
+
+
+
+@media (max-width: 1128px)
+{
+	.map,
+	.information
+	{
+		width:100%;
+	}
+}

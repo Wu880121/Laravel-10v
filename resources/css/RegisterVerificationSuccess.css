@@ -1,0 +1,34 @@
+*{
+	
+	margin:0;
+	padding:0;
+	box-sizing:border-box;
+	list-style:none;
+	text-decoration:none;
+}
+
+.register_success_a{
+	
+	font-size:2rem;
+}
+
+.register_success_h1{
+	
+	font-size:2rem;
+}
+
+.register_verify_successsuccsee_container{
+	
+	display:flex;
+	justify-content:center;
+	height:80vh;
+	align-items:center;
+}
+
+.register_verify_successsuccsee{
+	
+	display:flex;
+	align-items:center;
+	justify-content:center;
+	flex-direction:column;
+}
