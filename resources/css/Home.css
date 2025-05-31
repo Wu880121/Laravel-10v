@@ -56,7 +56,7 @@
 	width:100%;
 	height:100%;
 	display:flex;
-	justify-content:space-between;
+	justify-content:center;
 	flex-wrap:wrap;
 	background-color:#EAEFEF;
 	margin-top:2rem;
@@ -66,12 +66,18 @@
 .map
 {
 	max-width:100%;
-	width:500px;
+	width:700px;
 	height:350px;
 	//background-color:blue;
 	margin-left:2rem;
 	margin-right:2rem;
+	display:flex;
+	justify-content:center;
+	align-items:center;
+	
 }
+
+
 
 
 .information

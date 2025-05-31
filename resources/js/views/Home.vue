@@ -16,6 +16,8 @@
 	<div class="map">
 	<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3614.621535243362!2d121.51284127520641!3d25.046914777808038!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3442a97263b48c71%3A0x7f964669b3bf255e!2z6Ie65YyX6LuK56uZ!5e0!3m2!1szh-TW!2stw!4v1748289443867!5m2!1szh-TW!2stw" width="100%;" height="100%;" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
 	</div>
+	
+	
 	<div class="information">
 	<h1>聯絡資訊</h1>
 	<div class="information-content">
