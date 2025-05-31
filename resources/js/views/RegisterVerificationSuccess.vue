@@ -52,7 +52,9 @@ export default {
       alert('❌ 發生錯誤，請稍後再試')
 	  loadingForm.classList.add('hidden')
       console.error(err)
-    }
+    }finally{
+		loadingForm.classList.add('hidden')
+	}
   }
 }
 </script>

@@ -33,7 +33,7 @@ export default{
 		 form.addEventListener('submit', async (e)=>{
 		
 		e.preventDefault()
-		
+
 		loadingForm.classList.remove('hidden');
 		button.disabled = true;
 		
@@ -100,6 +100,7 @@ export default{
 		}finally
 		{
 			button.disabled = false;
+			loadingForm.classList.add('hidden');
 		}
 	});
  }

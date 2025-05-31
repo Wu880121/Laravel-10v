@@ -140,6 +140,7 @@ date.addEventListener('click',function(){
 	if(response.ok){
 	 alert('註冊成功，請前往信箱驗證');
 	 console.log(result);
+	 loadingForm.classList.add('hidden');
 	 window.location.href="/"
 	}else if(response .status ===422){
 	const errorMessage = '註冊失敗\n' + 
@@ -148,14 +149,17 @@ date.addEventListener('click',function(){
 		.join('\n');
 
 	     alert(errorMessage);
+		 loadingForm.classList.add('hidden');
 	}else{
 	alert('發生其他錯誤');
+	loadingForm.classList.add('hidden');
 	console.error(result);
 	}
 	
 	}catch(err){
 		console.error('發送失敗:',err);
 		alert('網路錯誤，請稍後在試');
+		loadingForm.classList.add('hidden');
 	  }finally{
 		loadingForm.classList.add('hidden');
 		submitButton.disabled=false;

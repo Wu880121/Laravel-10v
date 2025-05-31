@@ -2,7 +2,7 @@
 
 namespace App\Notifications;
 
-use Illuminate\Auth\Notifications\VerifyEmail as BaseVerifyEmail;
+use Illuminate\Auth\Notifications\VerifyEmail as BaseVerifyEmail;  //因為有引入這個所以不用via來告知哪種傳送方法
 use Illuminate\Support\Facades\URL;
 use Illuminate\Notifications\Messages\MailMessage;
 use Carbon\Carbon;

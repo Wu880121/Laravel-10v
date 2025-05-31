@@ -10,22 +10,34 @@ use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Notifications\CustomVerifyEmail;
+use App\Notifications\ResetPasswordNotification;
 
 
 class User extends Authenticatable implements JWTSubject, MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable;
 	
+	
+	//這邊是寄信用的複寫
 	public function sendEmailVerificationNotification()
      {
          $this->notify(new CustomVerifyEmail());
      }
-	
+	 
+	 public function sendPasswordResetNotification($token)
+     {
+       $this->notify(new ResetPasswordNotification($token)); // ✅ 可自由決定用哪封通知
+     }
+	 
+	 
+	//這邊是利用JWT抓id
 	public function getJWTIdentifier()
     {
         return $this->getKey();
     }
-
+	
+	
+	//這邊是JWT可以產生的欄位
     public function getJWTCustomClaims()
     {
         return [
@@ -71,4 +83,6 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+	
+	//把 email_verified_at 欄位的值，自動轉成 Carbon 類別（也就是 datetime 物件），讓你可以像操作時間一樣使用它。
 }

@@ -6,6 +6,8 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\AuthController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Http\Controllers\Auth\ResendRegisterVerificationEmailController;
+use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\Auth\Logout;
 use Illuminate\Support\Facades\URL;
 use App\Models\User;
 use Illuminate\Auth\Events\Verified;
@@ -58,7 +60,23 @@ Route::get('/verify-email', function (Request $request) {
 Route::middleware('jwt.cookie')->post('/resend_register_verification',[ResendRegisterVerificationEmailController::class, 'resendVerification']);
 
 Route::middleware('jwt.cookie')->group(function(){
-	
-	
-	
+		//這邊放要經過jwt.cookie 驗證的路由群組
+		Route::get('/me', function(Request $request){
+			return response()->json([
+				'status' => true,
+				'message' => "登入成功",
+				'code' =>200 ,
+				'user' => auth()->user(),
+			],200);
+		});
+		
+		//登出的post
+		Route::post('/logout',[Logout::class, 'logout']);
 });
+
+
+Route::post('send_reset_email',[ResetPasswordController::class, 'sendResetLinkEmail']);
+
+
+
+Route::post('reset_password',[ResetPasswordController::class,'reset']);

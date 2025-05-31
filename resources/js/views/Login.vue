@@ -28,7 +28,7 @@
 </div>
 
 <div class="button-template">
-<button type="submit" class="button">Login</button>
+<button type="submit" class="button" id="submitButton">Login</button>
 </div>
 <div class="register-form">
 <router-link to="/register">還沒有帳號嗎? 點擊註冊</router-link>
@@ -38,12 +38,12 @@
 </div>
 
 <div class="show-forgot-password-form none" id="show-forgot-password-form">
-<form class="forgot-password-form" id="forgot-password-form">
+<form  class="forgot-password-form" id="forgot-password-form">
 <div class="email-label"><label for="forgot-password-email">請輸入註冊帳號時的Email</label></div>
-<input type="email" id="forgot-password-email" placeholder="EnterEmail" required>
+<input type="email" id="forgot-password-email" placeholder="EnterEmail" required name="email">
 <div class="return-login" id="return-login"><router-link to="/login">返回登入畫面</router-link></div>
 <div class="button-template-forgot-password">
-<button class="button">Send</button>
+<button type="submit" class="button" id="submitButton_forgot">Send</button>
 </div>
 </form>
 </div>
@@ -68,6 +68,7 @@ const passwordCloseEye =document.getElementById("password-close-eye");
 const username = document.getElementById("username");		
 const usernameOpenEye = document.getElementById("username-open-eye");
 const usernameCloseEye = document.getElementById("username-close-eye");
+const submitButton = document.getElementById("submitButton");
 
 passwordOpenEye.addEventListener("click",function(){
 
@@ -104,6 +105,7 @@ const showForgotPasswordForm = document.getElementById('show-forgot-password-for
 const clickForgotPassword = document.getElementById('forgot-password-click');
 const clickReturnLoginform= document.getElementById('return-login');
 
+
 clickForgotPassword.addEventListener('click',()=>{
 showLoginForm.classList.add('none');
 showForgotPasswordForm.classList.remove('none');
@@ -117,17 +119,19 @@ showForgotPasswordForm.classList.add('none');
 //這邊開始是傳送json
 
 const loginForm=document.getElementById('login-form');
+const loadingForm = document.getElementById('loading-form');
 
 loginForm.addEventListener('submit', async (e) =>
 {
 	e.preventDefault();
-
+	loadingForm.classList.remove('hidden');
+	submitButton.disabled=true;
+	
 	const formData = new FormData(loginForm);
 	const data = Object.fromEntries(formData.entries());
 	
 	
-	try
-	{
+	try{
 		const response = await fetch('api/login',{
 			
 			'method':'post',
@@ -145,7 +149,7 @@ loginForm.addEventListener('submit', async (e) =>
 		if (response.ok)
 		{
 			alert('登入成功');
-			
+			loadingForm.classList.add('hidden');
 			const role = result.user.role.toLowerCase();
 			
 			if(role==='admin')
@@ -164,9 +168,11 @@ loginForm.addEventListener('submit', async (e) =>
 			.join('\n');
 			
 			alert(errorMessages);
+			loadingForm.classList.add('hidden');
 		}else
 		{
-			alert('發生其他錯誤');
+			alert('帳號密碼不正確');
+			loadingForm.classList.add('hidden');
 			console.error(result);
 		}
 		
@@ -174,9 +180,87 @@ loginForm.addEventListener('submit', async (e) =>
 	{
 		console.error('發送失敗:' , err);
 		alert('網路錯誤，請稍後在試');
+		loadingForm.classList.add('hidden');
+	}finally{
+	   submitButton.disabled=false;
+	  loadingForm.classList.add('hidden');
 	}
 });
+
+
+const forgetpasswordform = document.getElementById('forgot-password-form');
+const submitButton_forgot = document.getElementById('submitButton_forgot');
+
+forgetpasswordform.addEventListener('submit', async (e) => {
+  e.preventDefault();
+   loadingForm.classList.remove('hidden');
+   submitButton_forgot.disabled=true;
    
+  const email = {
+    email: document.getElementById('forgot-password-email').value.trim(),
+  };
+
+  try {
+    const response = await axios.post('/api/send_reset_email', email, {
+      headers: {
+        'Accept': 'application/json',
+      },
+    });
+
+    const { status, code, message } = response.data;
+
+    // ✅ 處理成功
+    if (code === 200) {
+      alert('✅ 信件已經送出囉，請去信箱查看');
+	   loadingForm.classList.add('hidden')
+      return;
+    }
+
+    // ⚠️ 特定錯誤代碼處理（不包括 422）
+    if (status === false && code !== 422) {
+      switch (code) {
+        case 404:
+          alert("❌ 查無此 email，請輸入與註冊時一樣的 email");
+		   loadingForm.classList.add('hidden')
+          break;
+        case 429:
+          alert("⏳ 請稍後再試：\n" + message); // 顯示剩餘時間
+		   loadingForm.classList.add('hidden')
+          break;
+        case 400:
+          alert("❌ 寄信失敗，請稍後再試");
+		   loadingForm.classList.add('hidden')
+          break;
+        default:
+          alert("⚠️ 錯誤：" + message);
+		   loadingForm.classList.add('hidden')
+      }
+    }
+
+  } catch (error) {
+    console.log("❗ 捕捉到錯誤:", error);
+
+    if (error.response) {
+      const { code, errors, message } = error.response.data;
+
+      if (code === 422 && errors) {
+        const errorMessages = Object.values(errors).flat().join('\n');
+        alert("🔍 驗證失敗：\n" + errorMessages);
+		 loadingForm.classList.add('hidden')
+      } else {
+        alert("⚠️ API 錯誤：" + (message || '發生未知錯誤'));
+		 loadingForm.classList.add('hidden')
+      }
+    } else {
+      alert("🚫 無法連線到伺服器，請檢查網路");
+	   loadingForm.classList.add('hidden')
+    }
+  }finally{
+	  submitButton_forgot.disabled=false; 
+	  loadingForm.classList.add('hidden')
+  }
+});
+
    }
 }
 

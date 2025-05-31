@@ -21,12 +21,39 @@ class AuthenticateWithJwtCookie
 		try{
 				
 				$token= $request->cookie('token');
-				JWTAuth::setToken($token)->authenticate();
 				
+				if(!$token){
+					return response()->json([
+							'status' =>false,
+							'code' =>401,
+							'error_type' =>"not_found_token",
+							'message' =>"請先登入",
+					],401);
+				}
+				
+				$user = JWTAuth::setToken($token)->authenticate();
+				
+				if(!$user){
+					return response()->json([
+							'status' =>false,
+							'code' =>401,
+							'error_type' =>"not_found_user",
+							'message' =>"查無此使用者",
+					],401);
+				}
+				
+				auth()->setUser($user);  // controller 裡就可以這樣用 $user = auth()->user();
 			
 		}catch(Exception $e){
 			
-			return response()->json(['message'=>'未授權'],401);
+			return response()->json([
+			
+			'status' => false,
+			'code' => 401,
+			'error_type' =>"not_authentication",
+			'message'=>'未授權',
+			
+			],401);
 		}
 
 

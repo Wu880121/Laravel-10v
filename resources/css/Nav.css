@@ -64,6 +64,24 @@ nav a{
 	color:#B6B09F;
 }
 
+#logout_button{
+	
+	background:black;
+	border:1px solid #B6B09F;
+	border-radius:5px;
+	color:#EAE4D5;
+	cursor:pointer;
+	padding:0.3rem;
+	font-size:2rem; 
+}
+
+#logout_button:hover{
+		
+	color: #F2F2F2;
+	text-shadow: 0 0 10px #F2F2F2;
+	
+}
+
 .nav a:hover{
 	
 	color: #F2F2F2;
@@ -210,6 +228,11 @@ nav a{
 .block
 {
 	display:block;
+}
+
+.hidden
+{
+	display:none;
 }
 
 @media (max-width: 786px)
