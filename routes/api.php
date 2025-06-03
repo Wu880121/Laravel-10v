@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\AuthController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Http\Controllers\Auth\ResendRegisterVerificationEmailController;
 use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\User\ProfileController;
 use App\Http\Controllers\Auth\Logout;
 use Illuminate\Support\Facades\URL;
 use App\Models\User;
@@ -59,6 +60,9 @@ Route::get('/verify-email', function (Request $request) {
 
 Route::middleware('jwt.cookie')->post('/resend_register_verification',[ResendRegisterVerificationEmailController::class, 'resendVerification']);
 
+//這是取得會員資料的
+Route::middleware('jwt.cookie')->get('/profile',[ProfileController::class, 'profile']);
+
 Route::middleware('jwt.cookie')->group(function(){
 		//這邊放要經過jwt.cookie 驗證的路由群組
 		Route::get('/me', function(Request $request){
@@ -72,11 +76,15 @@ Route::middleware('jwt.cookie')->group(function(){
 		
 		//登出的post
 		Route::post('/logout',[Logout::class, 'logout']);
+		
+		
+		//這是更新會員資料的
+		Route::post('/update_profile', [ProfileController::class, 'updateProfile']);
 });
 
 
-Route::post('send_reset_email',[ResetPasswordController::class, 'sendResetLinkEmail']);
+Route::post('/send_reset_email',[ResetPasswordController::class, 'sendResetLinkEmail']);
 
 
 
-Route::post('reset_password',[ResetPasswordController::class,'reset']);
+Route::post('/reset_password',[ResetPasswordController::class,'reset']);

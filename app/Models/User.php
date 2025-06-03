@@ -24,6 +24,7 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
          $this->notify(new CustomVerifyEmail());
      }
 	 
+	 //這邊是忘記密碼的
 	 public function sendPasswordResetNotification($token)
      {
        $this->notify(new ResetPasswordNotification($token)); // ✅ 可自由決定用哪封通知
@@ -47,6 +48,13 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
 			'lastname' => $this->lastname,
 		];
     }
+	
+	//這邊是資料庫的getXxxAttribute方法
+	
+	public function getPictureAttribute($value){
+		
+		return $value ?? 'storage/user_photos/default.png';
+	}
 
     /**
      * The attributes that are mass assignable.
@@ -63,6 +71,8 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
 		'birthdate',
 		'tel',
 		'address',
+		 'picture',
+		 'id',
     ];
 
     /**

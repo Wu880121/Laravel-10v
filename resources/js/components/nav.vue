@@ -12,9 +12,6 @@
 <router-link to="/login"   id="login_button" >Login</router-link>
 <button id="logout_button" class="hidden">Logout</button>
 <router-link to="/register">Register</router-link>
-<div>
-<router-link to="/resend_register_verification">補發驗證信</router-link>
-</div>
 </div>
 </nav>
 
@@ -44,7 +41,6 @@
 <li  id="li_login_button"><router-link to="/login">Login</router-link></li>
 <li id="li_logout_button" class="hidden">Logout</li>
 <li><router-link to="/register">Register</router-link></li>
-<li><router-link to="/resend_register_verification">補發驗證信</router-link></li>
 </ul>
 </div>
 </div>
@@ -60,6 +56,14 @@ name:'Nav',
 
 mounted()
 {
+	  this.mobilNav();
+	  this.showLoginAndLogout();
+	  this.Logout();
+},
+
+ methods:{
+
+	async  mobilNav(){
 	const one = document.getElementById('one');
 	const two = document.getElementById('two');
 	const three = document.getElementById('three');
@@ -85,7 +89,10 @@ mounted()
 		greyarea.classList.toggle('block');
 	});
 	
-	document.addEventListener('DOMContentLoaded', async () => {
+	},
+	
+	
+	async showLoginAndLogout(){
 		
 		const login_button = document.getElementById('login_button');
 		const logout_button = document.getElementById('logout_button');
@@ -117,7 +124,11 @@ mounted()
 				logout_button?.classList.add('hidden');
 				li_logout_button?.classList.add('hidden');
 			
-		}
+	   }	
+	},
+	
+	
+		async Logout(){
 		
 		document.querySelectorAll('#logout_button, #li_logout_button').forEach(btn => {
           
@@ -175,9 +186,9 @@ mounted()
 		});
 
 	 });
-	});
-	
+	}
   }
-}
+ }
+
 
 </script>

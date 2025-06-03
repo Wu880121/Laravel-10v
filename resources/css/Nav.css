@@ -114,7 +114,7 @@ nav a{
 
 .ul-form
 {
-	background-color:#EAE4D5;
+	background-color:#e5b939;
 	width:100%;
 	height:100%;
 	border-radius:10px;
@@ -130,7 +130,7 @@ nav a{
 .ul-form:hover{
    
    transform:scale(1.1);
-   box-shadow: 1px 1px 10px #F2F2F2;
+   box-shadow: 1px 1px 7px #c49b1c;
 }
 
 .ul-form li
@@ -159,7 +159,7 @@ nav a{
 {
 	height:100vh;
 	width:60%;
-	background-color:#EAEFEF;
+	background-color:#f6f3ee;
 	z-index:1000;
 	position:fixed;
 	top:4rem;
@@ -177,7 +177,7 @@ nav a{
 	justify-content:center;
 	align-items:center;
 	font-size:2rem;
-	text-align:left;
+	text-align:center;
 }
 
 .mobile-content-container ul
@@ -186,7 +186,7 @@ nav a{
 	width:100%;
 	max-width:200px;
 	flex-direction:column;
-	gap:1.5rem;
+	gap:2.5rem;
 }
 
 .mobile-content-container li
@@ -197,11 +197,18 @@ nav a{
 	border-radius:5px;
 	padding-bottom:0.3rem;
 	transition:0.2s ease;
+	color:#1f1f1f;
+	background-color:#d4a017;
+}
+
+.mobile-content-container li a
+{
+	color:black;
 }
 
 .mobile-content-container li:hover
 {
-	text-shadow:1px 1px 20px #8E1616;
+	box-shadow:1px 1px 20px #c49b1c;
 	transform:scale(1.1);
 }
 

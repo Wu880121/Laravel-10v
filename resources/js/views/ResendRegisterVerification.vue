@@ -5,7 +5,6 @@
 <form class="resend-verification-form" id="resend-verification-form">
 <div class="email-label"><label for="resend-verification-form-input">請輸入註冊帳號時的Email</label></div>
 <input type="email" name="email" id="resend-verification-form-input" placeholder="EnterEmail" required>
-<div class="resend_register_verification_return-login"><router-link to="/login">返回登入畫面</router-link></div>
 <div class="button-template-resend-verification">
 <button id="button" class="button">Send</button>
 </div>
