@@ -80,6 +80,9 @@ Route::middleware('jwt.cookie')->group(function(){
 		
 		//這是更新會員資料的
 		Route::post('/update_profile', [ProfileController::class, 'updateProfile']);
+		
+		//這是刪除會員資料的
+		Route::delete('/delete_profile',[ProfileController::class, 'delete']);
 });
 
 

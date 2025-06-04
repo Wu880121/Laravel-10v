@@ -146,6 +146,7 @@ loginForm.addEventListener('submit', async (e) =>
 		
 		const result = await response.json();
 		
+		
 		if (response.ok)
 		{
 			alert('登入成功');

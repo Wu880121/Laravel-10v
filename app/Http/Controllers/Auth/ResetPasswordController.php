@@ -41,7 +41,7 @@ class ResetPasswordController extends Controller
 				if($record)
 				{
 						 
-                  $createdAt = Carbon::parse($record->created_at);
+                  $createdAt = Carbon::parse($record->created_at);  //類似srttotime()
                   $expireAt = $createdAt->addMinutes(20); // 加20後的時間點
                   $remainingSeconds = Carbon::now()->diffInSeconds($expireAt, false);  //false等於可以是負數
                   

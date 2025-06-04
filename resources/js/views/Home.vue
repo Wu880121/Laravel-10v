@@ -71,7 +71,7 @@ export default {
 			 index = (index+1)%slides.length;
 			 showslides(index);
 			 
-		 },5000);
+		 },5000);  //1000一秒
    } 
 }
 </script>

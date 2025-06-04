@@ -49,7 +49,7 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
 		];
     }
 	
-	//這邊是資料庫的getXxxAttribute方法
+	//這邊是資料庫的getXxxAttribute方法，會自動判斷有沒有值，如果有就用傳進來的，如果沒有就用預設
 	
 	public function getPictureAttribute($value){
 		

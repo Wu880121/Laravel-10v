@@ -119,7 +119,7 @@ class ProfileController extends Controller
 				'code' =>200,
 				"success_type" =>"updat_success",
 				"message" =>"更新成功!",
-				
+				'user' => new UserResource($user),
 			],200);	
 			
 		}
@@ -139,5 +139,61 @@ class ProfileController extends Controller
 			],500);
 			
 	  }
+	}
+	
+	
+	public function delete(){
+		
+		
+		try{
+			
+			$user = auth()->user();
+			
+			if(!$user){
+				
+				return response()->json([
+			
+				'status' => false,
+				'code' => 401,
+				'error_type' => "delete_not_authancation",
+				'message' => "請先登入",
+			],401);
+				
+			}
+			
+			if($user->picture && $user->picture!== '/storage/user_photos/default.png' ){
+				
+				Storage::delete(str_replace('/storage/', '/public/' , $user->picture ));
+				
+			}
+			
+			$delete = $user->delete();
+			
+			if($delete){
+				
+				return response()->json([
+			
+				'status' => true,
+				'code' => 200,
+				'success_type' => "delete_success_delete",
+				'message' => "刪除成功!",
+			],200);
+				
+			}
+			
+			
+		}catch(\Exception $e){
+			
+			\Log::error($e->getMessage());
+			
+			return response()->json([
+			
+				'status' => false,
+				'code' => 500,
+				'error_type' => "delete_errors",
+				'message' => "發生錯誤，請稍後在嘗試",
+			],500);
+		}
+		
 	}
 }

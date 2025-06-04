@@ -4,15 +4,15 @@
 	
 	<div class="profile-container">
 	
-	<form  id="profile-form" @submit.prevent="updateProfile"  data-form>
+	<form  id="profile-form" @submit.prevent="handleSubmit"  data-form>
 	<label data-title>個人資料</label>
 	
 
 	
 	<div  class="file-div" data-div-row>
 	<img src="/public/images/rainbow-flag.png"  id="picture" style="width:80px; height:80px;">
-	<label for="picture" data-label>選擇照片</label>
-	<input type="file"  name="picture"  data-input >
+	<label for="pick_picture" data-label>選擇照片</label>
+	<input type="file" id="pick_picture"  name="picture"  data-input >
 	</div>
 	
 	<div data-div-row-tow>
@@ -77,7 +77,7 @@
 	</div>
 	
 	<div data-button-row class="register-button">
-	<button onclick="/delete" data-button>刪除</button>
+	<button @click="showCancelbox" type="button" id=delete_button data-button>刪除</button>
 	<button @click="goToResendVerification" data-button>補發驗證信</button>
   </div>
   
@@ -87,6 +87,15 @@
 	<div data-check-button>
 	<button type="submit" data-button-click>確定</button>
 	<button @click="cancelCheck"  type="button" data-button-click>取消</button>
+	</div>
+  </div>
+  
+    <div id="data-cancel-container" class="hidden" data-check-container>
+	<lable  data-check-container-label>確定要刪除嗎?</lable>
+	<img src="/public/images/exclamation-mark.png" atl="提醒" style="width:70px; height:70px;"> 
+	<div data-check-button>
+	<button type="button" @click="deleteProfile"  data-button-click>確定</button>
+	<button type="button" @click="hiddenCancelbox"  data-button-click>取消</button>
 	</div>
   </div>
 
@@ -115,6 +124,11 @@ export default{
     },
 
 	methods:{
+	
+	        async handleSubmit() {
+            await this.updateProfile();  // 更新資料
+            //(或其他功能）
+          },        
 		
 		  async goToResendVerification() {
                 
@@ -149,9 +163,8 @@ export default{
 			const data_check_container = document.getElementById('data-check-container');
 			
 			data_check_container.classList.add('hidden');
-		},
+		},		
 		
-			
 			async showCheck(){
 			
 			const data_check_container = document.getElementById('data-check-container');
@@ -159,6 +172,23 @@ export default{
 			data_check_container.classList.remove('hidden');
 		},
 	
+		
+		async showCancelbox(){
+			
+			const data_cancel_container = document.getElementById('data-cancel-container');
+			
+			data_cancel_container.classList.remove('hidden');
+		},		
+		
+		
+		async hiddenCancelbox(){
+			
+			const data_cancel_container = document.getElementById('data-cancel-container');
+			
+			data_cancel_container.classList.add('hidden');
+		},
+		
+		
 	
 		async showPicker(){
 			
@@ -290,13 +320,13 @@ export default{
 									this.hiddenLoading()
 								}
 								
-								const {message , status , code , success_type} = updateResponse.data;
+								const {message , status , code , success_type, user} = updateResponse.data;
 								
 								if(status===true && code===200 && success_type==="updat_success"){
 									
 									alert(message);	
                                     this.hiddenLoading()	
-                                    location.reload();									
+                                    document.getElementById('picture').src = user.picture;							
 								}
 						
 					}catch(error){
@@ -345,7 +375,77 @@ export default{
 					this.hiddenLoading()
 					update_button.disabled = false;
 				}
-		},		
+		},
+
+			async deleteProfile(){
+			
+				try{
+					
+					this.showLoading();
+					delete_button.disabled =true;
+					const response = await axios.delete('api/delete_profile', {
+						
+						withCredentials: true,
+						headers:{
+							
+							'Accept': 'application/json',
+						},
+					});
+					
+					if(!response){
+						alert("連線失敗");
+                        this.hiddenLoading()
+					}
+					
+					const {message, code, status , success_type}= response.data;
+					
+					if (status===true && success_type==="delete_success_delete" && code===200){
+						
+						alert(message);
+						window.location.href="/";
+						this.hiddenLoading()
+					}
+				
+				}catch(error){
+					
+					if(error.response){
+						
+						const {message , code , status, error_type} =error.response.data ;
+							
+						switch(error_type){
+							
+							case "delete_not_authancation":
+							alert(message);
+							this.hiddenLoading()
+							break;							
+							
+							case "delete_errors":
+							alert(message);
+							this.hiddenLoading();
+							break;
+							
+							default:
+							alert("發生未知錯誤，請稍後");
+							this.hiddenLoading();
+							break;
+						}
+						
+					}else{
+						
+						alert("網路發生問題");
+						this.hiddenLoading()
+					}
+					
+				}finally{
+					
+					this.hiddenLoading()
+					this.cancelCheck()
+					this.hiddenCancelbox()
+					delete_button.disabled = false;
+				}
+			
+			}
+			
 	}
 }	
 </script>
