@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Http\Controllers\Auth\ResendRegisterVerificationEmailController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\User\ProfileController;
+use App\Http\Controllers\Manage\DashboardController;
 use App\Http\Controllers\Auth\Logout;
 use Illuminate\Support\Facades\URL;
 use App\Models\User;
@@ -83,11 +84,20 @@ Route::middleware('jwt.cookie')->group(function(){
 		
 		//這是刪除會員資料的
 		Route::delete('/delete_profile',[ProfileController::class, 'delete']);
+		
+		//
+		
 });
 
 
 Route::post('/send_reset_email',[ResetPasswordController::class, 'sendResetLinkEmail']);
 
+Route::get('/index',[DashboardController::class, 'index']);
 
+Route::get('/manage_profile',[DashboardController::class, 'profile']);
+
+Route::post('/manage_profile_update/{id}',[DashboardController::class, 'profileUpdate']);
+
+Route::delete('/manage_profile_delete/{id}',[DashboardController::class, 'profileDelete']);
 
 Route::post('/reset_password',[ResetPasswordController::class,'reset']);

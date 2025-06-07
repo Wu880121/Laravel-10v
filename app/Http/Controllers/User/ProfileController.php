@@ -74,6 +74,7 @@ class ProfileController extends Controller
 		}
 			
 			if($request->file('picture')){
+				\Log::info('✅ 有收到圖片');
 				
 				 $file = $request->file('picture');
 				
@@ -196,4 +197,5 @@ class ProfileController extends Controller
 		}
 		
 	}
+
 }
