@@ -27,10 +27,8 @@
 </div>
 
 <div data-dashboard-input-area>
-<input type="text" data-dashboard-input id="search-input">
-<label for="search-input">
+<input type="text"  id="search-input" data-dashboard-input>
 <img src="/public/images/search.png"  style="width:40px; height:40px;" id="data-dashboard-image">
-</label>
 </div>
 
 <div id="data-member-info" data-member-info>
@@ -186,9 +184,21 @@ export default{
       mounted(){
 		
 			this.show_data_mobile_nav();
-			this.fetchUsers(1)	
-      },
+			this.fetchUsers(1);
+			document.getElementById('data-dashboard-image').addEventListener('click', ()=>{
+				this.fetchUsers();
+				this.show_loading_form();
+				console.log("有觸發");
+			});
+             const searchInput = document.getElementById('search-input');
 
+             searchInput.addEventListener('keydown', (e) => {
+               if (e.key === 'Enter') {
+                 this.fetchUsers(); // 正常觸發
+				 this.show_loading_form();
+                 } 
+			 });
+	  },
       methods:{
 		  
 		            submitForm() {
@@ -376,11 +386,13 @@ export default{
                         },
 				
 				async fetchUsers(page=1){
-					
-					
+						               
+			const keyword = document.getElementById('search-input').value;
+            console.log("目前輸入的關鍵字：", keyword);			
+					 
 					try{
 						
-						const res = await axios.get(`api/index?page=${page}` ,{
+						const res = await axios.get(`api/index?page=${page}&keyword=${keyword}` ,{
 							withCredentials:true,
 						});
 						
@@ -393,8 +405,18 @@ export default{
 					}catch(err){
 						
 						if(err.response){
-							alert("發生未知錯誤");
+							
+							const {code, status, message, error_type}= err.response.data;
+							
+							console.log("回傳錯誤內容：", err.response.data);
+                              if (code === 401 && status === false) {
+                                alert(message);
+                                window.location.href = "/";
+                              }
 						}
+					}finally{
+						
+						 this.hidden_loading_form();
 					}
 				},
 	  
@@ -405,12 +427,14 @@ export default{
 								withCredentials:true,
 							});
 								
-								const {code, user}=res.data;
+								const {code, user, success_type}=res.data;
 								
 								console.log("有抓到"+id);
+								console.log(code);
 								
-								if(res.data.code===200){
-									
+								if( success_type==="success_find"){
+								
+								console.log("有近來");
 								document.getElementById('firstname').value = user.firstname;
                                 document.getElementById('lastname').value = user.lastname;
                                 document.getElementById('email').value = user.email;

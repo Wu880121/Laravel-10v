@@ -15,7 +15,36 @@ class DashboardController extends Controller
 		
 		try{
 			
+           if (!$request->has('cookie') || empty($request->input('cookie'))) {
+               
+			   return response()->json([
+					'status' =>false,
+					'code' =>401,
+					'message'=> "沒有權限",
+					'error_type' => "not_authentication",
+			   ]);
+           }
+		
+          $keyword = $request->input('keyword');
+        $per_page = $request->input('per_page', 10);
 
+        $users = User::select('id', 'lastname', 'firstname', 'sex', 'picture');
+
+        // 你要搜尋的欄位
+        $searchableFields = ['lastname', 'firstname', 'sex','id'];
+
+        if (!empty($keyword)) {
+            $users->where(function ($q) use ($keyword, $searchableFields) {
+                foreach ($searchableFields as $field) {
+                    $q->orWhere($field, 'like', "%{$keyword}%");
+                }
+            });
+			
+		$users = $users->orderBy('id', 'asc')->paginate($per_page);
+
+        return response()->json($users);
+        }
+		
 		$per_page = $request->input('per_page', 10); 
 			
 		$users = User::select('id', 'lastname' , 'firstname' , 'sex', 'picture')
@@ -34,11 +63,9 @@ class DashboardController extends Controller
     }
   }
   
-  public function profile(Request $requset){
+  public function profile(Request $requset, $id){
 	  
 	  try{
-		  
-			$id = $requset->input('id');
 			
 			$user = User::findOrFail($id);
 			
