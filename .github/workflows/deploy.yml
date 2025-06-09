@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      IMAGE_NAME: yourdockerhub/laravel-10v
+      IMAGE_NAME: kocoimur0003/laravel-10v
       VERSION: v1
      
 
