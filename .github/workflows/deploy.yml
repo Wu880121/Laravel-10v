@@ -12,7 +12,7 @@ jobs:
     env:
       IMAGE_NAME: yourdockerhub/laravel-10v
       VERSION: v1
-      TAG: ${{ github.run_number }}-${{ github.event.head_commit.timestamp }}
+     
 
     steps:
       - name: Checkout code
@@ -26,12 +26,14 @@ jobs:
 
       - name: Build Docker image with tag
         run: |
-          docker build -t $IMAGE_NAME:latest -t $IMAGE_NAME:${VERSION}-${TAG} .
+          TAG=$(date +%Y%m%d%H%M%S)
+          echo "TAG=$TAG" >> $GITHUB_ENV
+          docker build -t $IMAGE_NAME:latest -t $IMAGE_NAME:$VERSION-$TAG .
 
       - name: Push Docker image to Docker Hub
         run: |
           docker push $IMAGE_NAME:latest
-          docker push $IMAGE_NAME:${VERSION}-${TAG}
+          docker push $IMAGE_NAME:$VERSION-${{ env.TAG }}
 
       - name: SSH & Deploy on EC2
         uses: appleboy/ssh-action@v0.1.10
