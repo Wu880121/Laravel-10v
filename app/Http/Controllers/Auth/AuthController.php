@@ -7,19 +7,23 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Http\Requests\Auth\AuthRequest;
-use App\app\Models\User;
+use App\Models\User;
+use Carbon\Carbon;
 
 class AuthController extends Controller
 {
+	
     public function login(AuthRequest $request){
 		
+		
+		try{
 		$data = $request->validated();
 		
 		$userData = User::where('email',$data['email'])->first();
 		
 		$login_attempts = $userData->login_attempts;
 		
-		$locked_until = $userData->locked_until;
+		$locked_until = Carbon::parse($userData->locked_until);
 		
 		if(!empty($locked_until) && $locked_until>now()){
 			
@@ -33,14 +37,14 @@ class AuthController extends Controller
 				'code' =>401,
 				'message' => "還剩下".$minutes."分".$seconds."秒",
 				'error_type' => 'still_locked',
-			]);
+			],401);
 		}
 		
-		if($locked_until<now()){
+		if(!empty($locked_until) &&$locked_until<now()){
 			
-		$locked_until=null;
-		$login_attempts=0;
-		$userData->save();
+		$userData->locked_until=null;
+        $userData->login_attempts=0;
+        $userData->save();
 		}
 	
 		
@@ -66,6 +70,8 @@ class AuthController extends Controller
 			
 			
 			$login_attempts++;
+			$userData->login_attempts = $login_attempts; 
+			$userData->save();
 			
 			if($login_attempts<5){
 				
@@ -73,9 +79,9 @@ class AuthController extends Controller
 				
 				'status' =>false,
 				'code' =>401,
-				'message' => "還剩下".$login_attempts."次機會",
+				'message' => "還剩下". 5-$login_attempts."次機會",
 				'error_type' => 'remaining_attempts',
-				]);
+				],401);
 			}
 			
 			if($login_attempts>=5){
@@ -85,18 +91,21 @@ class AuthController extends Controller
 				$minutes = floor($remaining/60);
 				$seconds = $remaining%60;
 				
+				$userData->locked_until =$locked_until;
+				$userData->save();
+				
 				return response()->json([
 				
 				'status' =>false,
 				'code' =>401,
 				'message' => "請".$minutes."分".$seconds."秒後再嘗試",
 				'error_type' => 'locked_attempts',
-				]);
+				],401);
 			}
 		}
 		
-		$locked_until=null;
-		$login_attempts=0;
+		$userData->locked_until=null;
+        $userData->login_attempts=0;
         $userData->save();
 		
 		$user = auth()->user();
@@ -107,6 +116,7 @@ class AuthController extends Controller
 	//	}
 		
 		return response()->json([
+			'code' =>200,
 			'message' => '登入成功!',
 			'user' => $user->only(['id', 'role' , 'firstname' , 'lastname' ]),
 		])->cookie(
@@ -120,5 +130,11 @@ class AuthController extends Controller
                false,                 // raw
                'Strict'               // SameSite（防 CSRF）
 		);
+	
+	}catch(\Throwable $e){
+		
+		\Log::error($e->getMessage());
+		
 	}
+  }
 }

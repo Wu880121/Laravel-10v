@@ -132,56 +132,70 @@ loginForm.addEventListener('submit', async (e) =>
 	
 	
 	try{
-		const response = await fetch('api/login',{
+		const response = await axios.post('api/login',data,{
 			
-			'method':'post',
-			'credentials':'include',
-			headers:
-			{
-				'Content-Type':'application/json',
-				'Accept':'application/json',
-			},
-			body:JSON.stringify(data),
+			withCredentials:true,
 		});
 		
-		const result = await response.json();
+		const {code, user, message} = response.data;
 		
 		
-		if (response.ok)
+		if (code===200)
 		{
 			alert('登入成功');
 			loadingForm.classList.add('hidden');
-			const role = result.user.role.toLowerCase();
+			const role = user.role.toLowerCase();
 			
 			if(role==='admin')
 			{
 				window.location.href='/admin/dashboard';
-			}else
-			{
+			}else{
 				window.location.href='/';
 			}
+		}
 			
-		}else if(response.status===422)
-		{
+	
+		
+	}catch(err){	
+		
+		const{message,code,status,error_type,errors}= err.response.data;
+		
+		console.log(JSON.stringify(err.response.data));
+		
+		if(status===false && code===422){
+			
 			const errorMessages = '驗證失敗\n'+
-			Object.entries(result.errors)
+			Object.entries(errors)
 			.map(([field,messages])=>`${field}:{messages.join(',')}`)
 			.join('\n');
 			
 			alert(errorMessages);
-			loadingForm.classList.add('hidden');
-		}else
-		{
-			alert('帳號密碼不正確');
-			loadingForm.classList.add('hidden');
-			console.error(result);
 		}
 		
-	}catch(err)
-	{
-		console.error('發送失敗:' , err);
-		alert('網路錯誤，請稍後在試');
-		loadingForm.classList.add('hidden');
+		switch(error_type){
+			
+			case "still_locked":
+			alert(message);
+			console.log("還在鎖中");
+			break;			
+			
+			case "remaining_attempts":
+			alert(message);
+			console.log("還剩下幾次機會");
+			break;			
+			
+			case "locked_attempts":
+			console.log("已經超錯五次");
+			alert(message);
+			break;
+			
+			
+			
+			default:
+			alert("發生未知錯誤");
+			break;
+		}
+		
 	}finally{
 	   submitButton.disabled=false;
 	  loadingForm.classList.add('hidden');

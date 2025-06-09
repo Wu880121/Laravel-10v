@@ -51,6 +51,40 @@
 	transform:scale(1.2);
 }
 
+[data-main-information]{
+	
+	display:flex;
+	justify-content:center;
+	align-items:center;
+	height:100%;
+	width:100%;
+	flex-wrap:wrap;
+	flex-direction:column;
+	gap:1rem;
+	font-size:2rem;
+	padding-bottom:1.5rem;
+	padding-top:1.5rem;
+	background-color:gery;
+}
+
+[data-p-container]{
+	
+	width:600px;
+	max-width:100%;
+	background-color:rgb(0,0,0,0.1);
+	height:100%;
+	border-radius:20px;
+	display:flex;
+	justify-content:center;
+	align-items:center;
+	flex-direction:column;
+	gap:1rem;
+	text-align:center;
+	padding-bottom:1rem;
+	padding-top:1rem;
+}
+
+
 .map-cover
 {
 	width:100%;
@@ -59,7 +93,6 @@
 	justify-content:center;
 	flex-wrap:wrap;
 	background-color:#EAEFEF;
-	margin-top:2rem;
 	margin-bottom:2rem;
 }
 

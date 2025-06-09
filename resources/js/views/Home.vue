@@ -9,8 +9,13 @@
 	<div class="left-bottom" id="left-bottom"><i class="fa-regular fa-circle-left" style="color: #ffffff;"></i></div>
 	</div>
 	
-
-
+	<div data-main-information>
+	<figure data-p-container>
+     <figcaption>「Espresso 的濃醇」</figcaption> 
+	 <img src="/public/images/coffee-beans.png" alt="圖片說明" style="width:50px; height:50px;">
+	 <figcaption> 「EasePleasure 的悠然」</figcaption>
+   </figure>   
+	</div>
 
 	<div class="map-cover">
 	<div class="map">
@@ -42,6 +47,11 @@ export default {
   
   mounted()
    {
+		
+		function initMap() {
+            console.log('Google Maps 已載入，但未初始化地圖。');
+          }          
+		
 		const slides = document.querySelectorAll('[data-slide]');
 		
 		const nextButton = document.getElementById('right-bottom');

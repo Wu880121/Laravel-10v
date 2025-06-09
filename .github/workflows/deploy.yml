@@ -1,0 +1,71 @@
+name: Build & Deploy Laravel Image to EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      IMAGE_NAME: yourdockerhub/laravel-10v
+      VERSION: v1
+      TAG: ${{ github.run_number }}-${{ github.event.head_commit.timestamp }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+      - name: Build Docker image with tag
+        run: |
+          docker build -t $IMAGE_NAME:latest -t $IMAGE_NAME:${VERSION}-${TAG} .
+
+      - name: Push Docker image to Docker Hub
+        run: |
+          docker push $IMAGE_NAME:latest
+          docker push $IMAGE_NAME:${VERSION}-${TAG}
+
+      - name: SSH & Deploy on EC2
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            IMAGE_NAME=${{ env.IMAGE_NAME }}
+            VERSION=${{ env.VERSION }}
+            TAG=${{ github.run_number }}-${{ github.event.head_commit.timestamp }}
+
+            echo "準備 EC2 掛載資料夾"
+            mkdir -p /home/ec2-user/laravel-10v-deploy/storage/app/public
+            mkdir -p /home/ec2-user/laravel-10v-deploy/storage/framework/{cache,sessions,views}
+            mkdir -p /home/ec2-user/laravel-10v-deploy/storage/logs
+            chown -R ec2-user:ec2-user /home/ec2-user/laravel-10v-deploy/storage
+
+            echo "切換到專案資料夾"
+            cd /home/ec2-user/laravel-10v-deploy
+
+            echo "拉取 Laravel 最新 image"
+            docker pull $IMAGE_NAME:$VERSION-$TAG
+
+            echo "更新 docker-compose.yml 中 app image"
+            sed -i "s|image: .*|image: $IMAGE_NAME:$VERSION-$TAG|" docker-compose.yml
+
+            echo "重新啟動 Laravel + Nginx"
+            docker compose down
+            docker compose up -d
+
+            echo "設定權限與建立 storage 符號連結"
+            docker exec laravel-10v chown -R www-data:www-data /var/www/html/storage
+            docker exec laravel-10v php artisan storage:link
+
+            echo "清理 24 小時前的舊 image"
+            docker image prune -af --filter "until=24h"

@@ -2,7 +2,7 @@
 
 <nav id="Nav" class="nav">
 <div class="icon">
-<h1>Coffee</h1>
+<h1>EasePleasure</h1>
 </div>
 <div class="middle-link">
 <router-link to="/">Home</router-link>

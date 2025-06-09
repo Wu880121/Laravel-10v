@@ -15,7 +15,7 @@ class DashboardController extends Controller
 		
 		try{
 			
-           if (!$request->has('cookie') || empty($request->input('cookie'))) {
+           if (!$request->hasCookie('token') || empty($request->cookie('token')) ) {
                
 			   return response()->json([
 					'status' =>false,
@@ -45,11 +45,8 @@ class DashboardController extends Controller
         return response()->json($users);
         }
 		
-		$per_page = $request->input('per_page', 10); 
 			
-		$users = User::select('id', 'lastname' , 'firstname' , 'sex', 'picture')
-				->orderby('id', 'asc')  //desc是倒序
-				->paginate($per_page);
+               $users = $users->orderBy('id', 'asc')->paginate($per_page);
 				
 				return response()-> json($users);
 				
