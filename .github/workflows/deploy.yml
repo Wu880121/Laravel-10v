@@ -39,6 +39,15 @@ jobs:
           docker build -t $IMAGE_NAME:latest -t $IMAGE_NAME:${{ env.TAG }} .
           docker push $IMAGE_NAME:latest
           docker push $IMAGE_NAME:${{ env.TAG }}
+          
+      - name: 📦 SCP build 到 EC2 public/
+        uses: appleboy/scp-action@v0.1.6
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: "./build"
+          target: "/home/ec2-user/laravel-10v/public"
 
       - name: 🚀 Deploy to EC2 (PHP + Nginx)
         uses: appleboy/ssh-action@v0.1.10
