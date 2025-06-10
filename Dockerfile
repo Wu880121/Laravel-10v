@@ -28,8 +28,6 @@ COPY . .
 # 安裝 Laravel 相依套件
 RUN composer install --optimize-autoloader --no-dev
 
-# ✅ 安裝並編譯 Vite 前端資源
-RUN npm install && npm run build
 
 
 # 修正權限（這次是有效的 RUN 區塊）
