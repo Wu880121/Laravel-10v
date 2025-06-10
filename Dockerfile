@@ -1,38 +1,36 @@
-# 使用 PHP 8.2 + FPM 作為 base image
+# 使用 PHP 8.2 + FPM + Node 環境
+FROM node:18-bullseye as nodebuild
+
+# 建立 Vite build（包含 Laravel 的前端）
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+
+COPY . .
+RUN npm run build
+
+
+# 第二階段：Laravel PHP App
 FROM php:8.2-fpm
 
-# 安裝系統套件與 PHP 擴充
 RUN apt-get update && apt-get install -y \
-    git \
-    curl \
-    zip \
-    unzip \
-    libzip-dev \
-    libpng-dev \
-    libonig-dev \
-    libxml2-dev \
-    libjpeg-dev \
-    libfreetype6-dev \
+    git curl zip unzip libzip-dev libpng-dev libonig-dev libxml2-dev libjpeg-dev libfreetype6-dev \
     && docker-php-ext-install pdo pdo_mysql zip mbstring exif pcntl bcmath
 
-# 安裝 Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# 設定工作目錄
 WORKDIR /var/www/html
 
-
-# 複製 Laravel 專案原始碼（請搭配 .dockerignore）
 COPY . .
 
-# 安裝 Laravel 相依套件
+# 將 Vite build 複製進來
+COPY --from=nodebuild /app/public/build public/build
+
+# 安裝 PHP 套件
 RUN composer install --optimize-autoloader --no-dev
 
+# 權限設定
+RUN chmod -R 775 storage bootstrap/cache && \
+    chown -R www-data:www-data storage bootstrap/cache
 
-
-# 修正權限（這次是有效的 RUN 區塊）
-RUN chmod -R 775 storage bootstrap/cache \
-    && chown -R www-data:www-data storage bootstrap/cache
-
-# 啟動 php-fpm
 CMD ["php-fpm"]

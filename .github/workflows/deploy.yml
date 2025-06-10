@@ -27,10 +27,16 @@ jobs:
           echo "TAG=$TAG" >> $GITHUB_ENV
           
           
+      - name: 🛠️ 安裝 Node.js 環境（for Vite）
+        uses: actions/setup-node@v3
+        with:
+            node-version: 18
+
       - name: ⚙️ 安裝前端資源並編譯 Vite
         run: |
           npm ci
           npm run build
+          ls -al public/build  # Debug 用，確認有沒有產出
 
       - name: 🔐 Docker Hub Login
         uses: docker/login-action@v3
