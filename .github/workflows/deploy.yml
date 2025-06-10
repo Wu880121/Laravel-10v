@@ -73,6 +73,7 @@ jobs:
             echo "🐘 啟動 Laravel App 容器（僅掛載 storage, public, .env）"
             docker run -d --name laravel-app \
               --restart unless-stopped \
+              --network laravel-net \
               -v /home/ec2-user/laravel-10v/storage:/var/www/html/storage \
               -v /home/ec2-user/laravel-10v/public:/var/www/html/public \
               -v /home/ec2-user/laravel-10v/.env:/var/www/html/.env \
@@ -85,6 +86,7 @@ jobs:
             echo "🌐 啟動 Nginx（掛載 public 與 config）"
             docker run -d --name Laravel-10v-nginx-server \
               --restart unless-stopped \
+              --network laravel-net \
               -p 8080:80 \
               -v /home/ec2-user/laravel-10v/public:/var/www/html/public \
               -v /home/ec2-user/laravel-10v/nginx/default.conf:/etc/nginx/conf.d/default.conf \
