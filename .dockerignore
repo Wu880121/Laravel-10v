@@ -1,8 +1,8 @@
+# 排除不必要的東西
 node_modules
 vendor
 .env
-.dockerignore
-.git
-.gitignore
-tests
 *.log
+
+# 不要排除 public/build！！
+# public/build
