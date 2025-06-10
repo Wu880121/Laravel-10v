@@ -10,7 +10,8 @@
     <title>Coffee</title>
     
     <!-- ✅ 載入 Vite 編譯後的 Vue 應用 -->
-    @vite('resources/js/app.js')
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
 </head>
 <body>
     <div id="app">
