@@ -25,7 +25,7 @@ WORKDIR /var/www/html
 RUN rm -rf /var/www/html/*
 
 # 複製專案檔案
-#COPY . /var/www/html
+COPY . .
 
 # 設定權限(Windows沒辦法設定這指令，Linux才行)
 # RUN chown -R www-data:www-data /var/www/html \
