@@ -25,6 +25,11 @@ jobs:
           VERSION=$((COUNT+1))
           TAG="${TODAY}_V${VERSION}"
           echo "TAG=$TAG" >> $GITHUB_ENV
+          
+        - name: ⚙️ 安裝前端資源並編譯 Vite
+        run: |
+          npm ci
+          npm run build
 
       - name: 🔐 Docker Hub Login
         uses: docker/login-action@v3
