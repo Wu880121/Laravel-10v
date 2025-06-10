@@ -75,7 +75,6 @@ jobs:
               --restart unless-stopped \
               --network laravel-net \
               -v /home/ec2-user/laravel-10v/storage:/var/www/html/storage \
-              -v /home/ec2-user/laravel-10v/public:/var/www/html/public \
               -v /home/ec2-user/laravel-10v/.env:/var/www/html/.env \
               $IMAGE_NAME:$TAG
 
