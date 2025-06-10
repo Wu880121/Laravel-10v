@@ -83,7 +83,7 @@ jobs:
             docker exec laravel-app php artisan storage:link
 
             echo "🌐 啟動 Nginx（掛載 public 與 config）"
-            docker run -d --name nginx-server \
+            docker run -d --name Laravel-10v-nginx-server \
               --restart unless-stopped \
               -p 8080:80 \
               -v /home/ec2-user/laravel-10v/public:/var/www/html/public \
