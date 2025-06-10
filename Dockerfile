@@ -30,11 +30,7 @@ COPY . .
 # 安裝 Laravel 相依套件
 RUN composer install --optimize-autoloader --no-dev
 
-# Laravel 必要指令
-RUN php artisan key:generate \
-    && php artisan config:cache \
-    && php artisan route:cache \
-    && php artisan view:cache
+
 
 # 修正權限（這次是有效的 RUN 區塊）
 RUN chmod -R 775 storage bootstrap/cache \
