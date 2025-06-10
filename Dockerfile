@@ -21,17 +21,24 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 # 設定工作目錄
 WORKDIR /var/www/html
 
-# ✅ 清除舊檔案（可選）
+# 清除舊檔案（可選）
 RUN rm -rf /var/www/html/*
 
-# 複製專案檔案
+# 複製 Laravel 專案原始碼（請搭配 .dockerignore）
 COPY . .
 
+# 安裝 Laravel 相依套件
 RUN composer install --optimize-autoloader --no-dev
 
-# 設定權限(Windows沒辦法設定這指令，Linux才行)
-# RUN chown -R www-data:www-data /var/www/html \
-#    && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+# Laravel 必要指令
+RUN php artisan key:generate \
+    && php artisan config:cache \
+    && php artisan route:cache \
+    && php artisan view:cache
+
+# 修正權限（這次是有效的 RUN 區塊）
+RUN chmod -R 775 storage bootstrap/cache \
+    && chown -R www-data:www-data storage bootstrap/cache
 
 # 啟動 php-fpm
 CMD ["php-fpm"]
