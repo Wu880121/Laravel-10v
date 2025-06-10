@@ -21,8 +21,6 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 # 設定工作目錄
 WORKDIR /var/www/html
 
-# 清除舊檔案（可選）
-RUN rm -rf /var/www/html/*
 
 # 複製 Laravel 專案原始碼（請搭配 .dockerignore）
 COPY . .
