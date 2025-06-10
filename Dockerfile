@@ -27,6 +27,8 @@ RUN rm -rf /var/www/html/*
 # 複製專案檔案
 COPY . .
 
+RUN composer install --optimize-autoloader --no-dev
+
 # 設定權限(Windows沒辦法設定這指令，Linux才行)
 # RUN chown -R www-data:www-data /var/www/html \
 #    && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
