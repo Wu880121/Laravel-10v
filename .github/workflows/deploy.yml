@@ -77,7 +77,7 @@ jobs:
               -v /home/ec2-user/laravel-10v/storage:/var/www/html/storage \
               -v /home/ec2-user/laravel-10v/public:/var/www/html/public \
               -v /home/ec2-user/laravel-10v/.env:/var/www/html/.env \
-              kocoimur0003/laravel-10v:<TAG>
+              $IMAGE_NAME:$TAG
 
             echo "🔗 建立 storage:link 與修正權限"
             docker exec laravel-app chown -R www-data:www-data /var/www/html/storage
