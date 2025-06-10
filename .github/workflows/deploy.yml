@@ -49,17 +49,17 @@ jobs:
             TAG=${{ env.TAG }}
 
             echo "📁 建立 Laravel 部署資料夾"
-            mkdir -p /home/ec2-user/laravel-10v-deploy/storage/app/public
-            mkdir -p /home/ec2-user/laravel-10v-deploy/storage/framework/{cache,sessions,views}
-            mkdir -p /home/ec2-user/laravel-10v-deploy/storage/logs
-            mkdir -p /home/ec2-user/laravel-10v-deploy/nginx
+            mkdir -p /home/ec2-user/laravel-10v/storage/app/public
+            mkdir -p /home/ec2-user/laravel-10v/storage/framework/{cache,sessions,views}
+            mkdir -p /home/ec2-user/laravel-10v/storage/logs
+            mkdir -p /home/ec2-user/laravel-10v/nginx
 
             echo "🔧 檢查是否存在 public 資料夾，若無則建立"
-            if [ ! -d "/home/ec2-user/laravel-10v-deploy/public" ]; then
+            if [ ! -d "/home/ec2-user/laravel-10v/public" ]; then
               echo "⚠️ public 資料夾不存在，建立中..."
-              mkdir -p /home/ec2-user/laravel-10v-deploy/public
+              mkdir -p /home/ec2-user/laravel-10v/public
               chown -R ec2-user:ec2-user /home/ec2-user/laravel-10v-deploy/public
-              chmod -R 775 /home/ec2-user/laravel-10v-deploy/public
+              chmod -R 775 /home/ec2-user/laravel-10v/public
             fi
 
             echo "📥 拉取最新 Laravel Image"
@@ -72,7 +72,7 @@ jobs:
             echo "🐘 啟動 Laravel 容器"
             docker run -d --name laravel-app \
               --restart unless-stopped \
-              -v /home/ec2-user/laravel-10v-deploy:/var/www/html \
+              -v /home/ec2-user/laravel-10v:/var/www/html \
               $IMAGE_NAME:$TAG
 
             echo "🔗 建立 storage:link 與權限設定"
@@ -87,8 +87,8 @@ jobs:
             docker run -d --name nginx-server \
               --restart unless-stopped \
               -p 8080:80 \
-              -v /home/ec2-user/laravel-10v-deploy:/var/www/html \
-              -v /home/ec2-user/laravel-10v-deploy/nginx/default.conf:/etc/nginx/conf.d/default.conf \
+              -v /home/ec2-user/laravel-10v:/var/www/html \
+              -v /home/ec2-user/laravel-10v/nginx/default.conf:/etc/nginx/conf.d/default.conf \
               nginx:alpine
 
             echo "🧽 清除 24 小時前未使用的 image"
