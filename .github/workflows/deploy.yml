@@ -81,6 +81,12 @@ jobs:
             echo "🔗 建立 storage:link 與修正權限"
             docker exec laravel-app chown -R www-data:www-data /var/www/html/storage
             docker exec laravel-app php artisan storage:link
+            
+            echo "🧪 執行 Laravel 初始化指令"
+            docker exec laravel-app php artisan key:generate
+            docker exec laravel-app php artisan config:cache
+            docker exec laravel-app php artisan route:cache
+            docker exec laravel-app php artisan view:cache            
 
             echo "🌐 啟動 Nginx（掛載 public 與 config）"
             docker run -d --name Laravel-10v-nginx-server \
