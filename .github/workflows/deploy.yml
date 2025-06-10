@@ -33,21 +33,18 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+          
+      - name: ⚙️ 安裝前端資源並編譯 Vite
+        run: |
+          npm ci
+          npm run build
+
 
       - name: 🐳 Build & Push Docker Image
         run: |
           docker build -t $IMAGE_NAME:latest -t $IMAGE_NAME:${{ env.TAG }} .
           docker push $IMAGE_NAME:latest
           docker push $IMAGE_NAME:${{ env.TAG }}
-          
-      - name: 📦 SCP build 到 EC2 public/
-        uses: appleboy/scp-action@v0.1.6
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          source: "./build"
-          target: "/home/ec2-user/laravel-10v/public"
 
       - name: 🚀 Deploy to EC2 (PHP + Nginx)
         uses: appleboy/ssh-action@v0.1.10
@@ -87,6 +84,7 @@ jobs:
               --network laravel-net \
               -v /home/ec2-user/laravel-10v/storage:/var/www/html/storage \
               -v /home/ec2-user/laravel-10v/.env:/var/www/html/.env \
+              -v /home/ec2-user/laravel-10v/public:/var/www/html/public
               $IMAGE_NAME:$TAG
 
             echo "🔗 建立 storage:link 與修正權限"
