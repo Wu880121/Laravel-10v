@@ -25,26 +25,35 @@ jobs:
           VERSION=$((COUNT+1))
           TAG="${TODAY}_V${VERSION}"
           echo "TAG=$TAG" >> $GITHUB_ENV
-          
-          
 
       - name: 🔐 Docker Hub Login
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
-          
+
       - name: ⚙️ 安裝前端資源並編譯 Vite
         run: |
           npm ci
           npm run build
-
 
       - name: 🐳 Build & Push Docker Image
         run: |
           docker build -t $IMAGE_NAME:latest -t $IMAGE_NAME:${{ env.TAG }} .
           docker push $IMAGE_NAME:latest
           docker push $IMAGE_NAME:${{ env.TAG }}
+
+      # ✅ 加上自動清除空間的任務
+      - name: 🧽 Clean Up EC2 Docker Space (Before Deploy)
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            echo "⚠️ 清除沒在用的 Docker 資源以釋放磁碟空間..."
+            docker system prune -af --volumes || true
+            echo "✅ 已清除 Docker 系統資源"
 
       - name: 🚀 Deploy to EC2 (PHP + Nginx)
         uses: appleboy/ssh-action@v0.1.10
@@ -78,13 +87,13 @@ jobs:
             docker stop nginx-server || true
             docker rm nginx-server || true
 
-            echo "🐘 啟動 Laravel App 容器（僅掛載 storage, public, .env）"
+            echo "🐘 啟動 Laravel App 容器（掛載 storage, public, .env）"
             docker run -d --name laravel-app \
               --restart unless-stopped \
               --network laravel-net \
               -v /home/ec2-user/laravel-10v/storage:/var/www/html/storage \
+              -v /home/ec2-user/laravel-10v/public:/var/www/html/public \
               -v /home/ec2-user/laravel-10v/.env:/var/www/html/.env \
-              -v /home/ec2-user/laravel-10v/public:/var/www/html/public
               $IMAGE_NAME:$TAG
 
             echo "🔗 建立 storage:link 與修正權限"
@@ -92,8 +101,8 @@ jobs:
             docker exec laravel-app php artisan storage:link
             
             echo "🧪 執行 Laravel 初始化指令"
-            docker exec laravel-app chown -R www-data:www-data storage bootstrap/cache
-            docker exec laravel-app chmod -R 775 storage bootstrap/cache
+            docker exec laravel-app chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+            docker exec laravel-app chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
             docker exec laravel-app php artisan key:generate
             docker exec laravel-app php artisan config:cache
             docker exec laravel-app php artisan route:cache
