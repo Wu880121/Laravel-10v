@@ -416,6 +416,7 @@ export default{
 							  
 							  if(error_type==="is_not_administrator" && code===401 && status===false){
 								  
+								  console.log(message);
 								  alert(message);
 								  window.location.href = "/";
 							  }

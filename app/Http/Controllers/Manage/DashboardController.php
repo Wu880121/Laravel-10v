@@ -36,8 +36,8 @@ class DashboardController extends Controller
 				'status' =>false,
 				'code' =>401,
 				"message"=>"不是管理者請勿進入",
-				"error_type"=> "is_not_administrator"
-			   ]);
+				"error_type"=> "is_not_administrator",
+			   ],401);
 		   }
 			
           $keyword = $request->input('keyword');
