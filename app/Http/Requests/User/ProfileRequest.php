@@ -29,7 +29,7 @@ class ProfileRequest extends FormRequest
 				'email'=>[
 				'required',
 				'regex:/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/',
-				Rule::unique('users', 'email')->ignore($this->input('id')),
+				Rule::unique('users', 'email')->ignore(auth()->id()),
 				//Laravel 就會自動把 POST 裡的 {id} 傳給你 FormRequest 內的：
 			],
 				

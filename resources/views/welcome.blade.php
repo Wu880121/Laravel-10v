@@ -7,7 +7,7 @@
    <!-- ✅ 確保這行存在：讓 media query / RWD 有效 -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
-    <title>Coffee</title>
+    <title>EasePleasure</title>
     
     <!-- ✅ 載入 Vite 編譯後的 Vue 應用 -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
