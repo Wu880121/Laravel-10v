@@ -413,6 +413,12 @@ export default{
                                 alert(message);
                                 window.location.href = "/";
                               }
+							  
+							  if(error_type==="is_not_administrator" && code===401 && status===false){
+								  
+								  alert(message);
+								  window.location.href = "/";
+							  }
 						}
 					}finally{
 						
@@ -485,12 +491,16 @@ export default{
 								if(code===200 && success_type==="update_success"){
 									
 									
-								  document.getElementById('firstname').value = user.firstname;
-                                  document.getElementById('lastname').value = user.lastname;
-									document.getElementById('user_sex').value=user.sex
-									document.getElementById('user_id').value=user.id
-									document.getElementById('picture').src = user.picture;
-									location.reload();
+								document.getElementById('firstname').value = user.firstname;
+                                document.getElementById('lastname').value = user.lastname;
+                                document.getElementById('email').value = user.email;
+                                document.getElementById('address').value = user.address;
+                                document.getElementById('sex').value =user.sex;
+                                document.getElementById('birthdate').value = user.birthdate;
+                                document.getElementById('country').value = user.country;
+                                document.getElementById('tel').value = user.tel;
+                                document.getElementById('picture').src = user.picture;
+                                document.getElementById('data-id').value = user.id;
 									alert("更新成功");
 									console.log(user.picture);
 									this.hidden_loading_form()

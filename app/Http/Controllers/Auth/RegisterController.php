@@ -64,9 +64,9 @@ class RegisterController extends Controller
 		 'token',                // cookie 名稱
         $token,                // 寫入 JWT token
         60,                    // 分鐘數（有效時間）
-        '/',                   // 路徑
+        '/', '.keepgoingpiggy.com',                     // 路徑
         null,                  // 網域（跨網域再設定）
-        true,                  // Secure（建議上線環境用）
+        false,                  // Secure（建議上線環境用）
         true,                  // HttpOnly（最重要！JS 讀不到）
         false,                 // raw
         'Strict'               // SameSite（防 CSRF）

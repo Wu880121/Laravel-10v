@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Manage;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
-use App\Http\Requests\User\ProfileRequest;
+use App\Http\Requests\User\DashboardRequest;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -24,7 +24,22 @@ class DashboardController extends Controller
 					'error_type' => "not_authentication",
 			   ]);
            }
-		
+		   
+		   $role = auth()->user();
+		   
+		   $role = $role->role;
+		   
+		   if($role!=="admin"){
+			   
+			   return response()->json([
+			   
+				'status' =>false,
+				'code' =>401,
+				"message"=>"不是管理者請勿進入",
+				"error_type"=> "is_not_administrator"
+			   ]);
+		   }
+			
           $keyword = $request->input('keyword');
         $per_page = $request->input('per_page', 10);
 
@@ -89,7 +104,7 @@ class DashboardController extends Controller
 			}
 	  }
 	  
-	  public function profileUpdate(ProfileRequest $request ,$id){
+	  public function profileUpdate(DashboardRequest $request ,$id){
 		  	  
 		  try{
 		  $data = $request->validated();
