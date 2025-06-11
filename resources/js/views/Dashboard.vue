@@ -484,11 +484,13 @@ export default{
 								
 								if(code===200 && success_type==="update_success"){
 									
-									document.getElementById('user_picture').src=user.picture
-									document.getElementById('user_name').value=user.picture
-									document.getElementById('user_sex').value=user.picture
-									document.getElementById('user_id').value=user.picture
+									
+								  document.getElementById('firstname').value = user.firstname;
+                                  document.getElementById('lastname').value = user.lastname;
+									document.getElementById('user_sex').value=user.sex
+									document.getElementById('user_id').value=user.id
 									document.getElementById('picture').src = user.picture;
+									//this.fetchUsers();
 									alert("更新成功");
 									console.log(user.picture);
 									this.hidden_loading_form()
