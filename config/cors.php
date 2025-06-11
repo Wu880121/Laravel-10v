@@ -20,7 +20,7 @@ return [
 
     'allowed_methods' => ['*'], // 所有 method 都允許（GET、POST...）
 
-    'allowed_origins' => explode(',' , env('FRONTEND_URLS','http://localhost:8080')),
+    'allowed_origins' => explode(',' , env('FRONTEND_URLS','http://easepleasure.keepgoingpiggy.com')),
 
     'allowed_origins_patterns' => [],
 
