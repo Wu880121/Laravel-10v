@@ -490,7 +490,7 @@ export default{
 									document.getElementById('user_sex').value=user.sex
 									document.getElementById('user_id').value=user.id
 									document.getElementById('picture').src = user.picture;
-									this.fetchUsers();
+									location.reload();
 									alert("更新成功");
 									console.log(user.picture);
 									this.hidden_loading_form()
