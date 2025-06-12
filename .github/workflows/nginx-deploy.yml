@@ -16,7 +16,7 @@ jobs:
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_KEY }}
+          key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             echo "🧨 停止並移除現有 nginx_server 容器（如果有）"
             docker stop nginx_server || true && docker rm nginx_server || true
