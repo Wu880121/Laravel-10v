@@ -125,7 +125,7 @@ class AuthController extends Controller
                $rememberme?60*24*2:60*2,                    // 分鐘數（有效時間）
                '/', '.keepgoingpiggy.com',                  // 路徑
                null,                  // 網域（跨網域再設定）
-               false,                  // Secure（建議上線環境用）
+               true,                  // Secure（建議上線環境用）
                true,                  // HttpOnly（最重要！JS 讀不到）
                false,                 // raw
                'Strict'               // SameSite（防 CSRF）
