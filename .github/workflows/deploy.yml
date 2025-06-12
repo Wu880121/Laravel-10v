@@ -43,7 +43,6 @@ jobs:
           docker push $IMAGE_NAME:latest
           docker push $IMAGE_NAME:${{ env.TAG }}
 
-      # ✅ 加上自動清除空間的任務
       - name: 🧽 Clean Up EC2 Docker Space (Before Deploy)
         uses: appleboy/ssh-action@v0.1.10
         with:
@@ -64,6 +63,7 @@ jobs:
           script: |
             IMAGE_NAME=${{ env.IMAGE_NAME }}
             TAG=${{ env.TAG }}
+            WORKDIR=/var/www/laravel-10v
 
             echo "📁 建立必要資料夾"
             mkdir -p /home/ec2-user/laravel-10v/public
@@ -87,27 +87,32 @@ jobs:
             docker stop nginx-server || true
             docker rm nginx-server || true
 
-            echo "🐘 啟動 Laravel App 容器（掛載 storage, public, .env）"
+            echo "🐘 啟動 Laravel App 容器（掛載路徑修正）"
             docker run -d --name laravel-app \
               --restart unless-stopped \
               --network laravel-net \
-              -v /home/ec2-user/laravel-10v/storage:/var/www/storage \
-              -v /home/ec2-user/laravel-10v/public:/var/www/public \
-              -v /home/ec2-user/laravel-10v/.env:/var/www/.env \
+              -v /home/ec2-user/laravel-10v/storage:/var/www/laravel-10v/storage \
+              -v /home/ec2-user/laravel-10v/public:/var/www/laravel-10v/public \
+              -v /home/ec2-user/laravel-10v/.env:/var/www/laravel-10v/.env \
               $IMAGE_NAME:$TAG
 
-            echo "🔗 建立 storage:link 與修正權限"
-            docker exec laravel-app chown -R www-data:www-data /var/www/storage
-            docker exec laravel-app php artisan storage:link
-            
+            echo "🔗 修正權限與建立 storage:link"
+            docker exec laravel-app chown -R www-data:www-data /var/www/laravel-10v/storage /var/www/laravel-10v/bootstrap/cache
+            docker exec laravel-app chmod -R 775 /var/www/laravel-10v/storage /var/www/laravel-10v/bootstrap/cache
+            docker exec laravel-app php /var/www/laravel-10v/artisan storage:link
+
             echo "🧪 執行 Laravel 初始化指令"
-            docker exec laravel-app chown -R www-data:www-data /var/www/storage /var/www/html/bootstrap/cache
-            docker exec laravel-app chmod -R 775 /var/www/html/storage /var/www/bootstrap/cache
-            docker exec laravel-app php artisan key:generate
-            docker exec laravel-app php artisan config:cache
-            docker exec laravel-app php artisan route:cache
-            docker exec laravel-app php artisan view:cache            
+            docker exec laravel-app php /var/www/laravel-10v/artisan key:generate
+            docker exec laravel-app php /var/www/laravel-10v/artisan config:cache
+            docker exec laravel-app php /var/www/laravel-10v/artisan route:cache
+            docker exec laravel-app php /var/www/laravel-10v/artisan view:cache
 
-
-            echo "🧽 清除 24 小時前未使用的 image"
+      - name: ❄️ Clean up old images
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            echo "🧼 移除 24 小時前未使用的 Docker image"
             docker image prune -af --filter "until=24h"
