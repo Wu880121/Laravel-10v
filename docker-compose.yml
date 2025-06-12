@@ -21,7 +21,7 @@ services:
       - ./MemberSystemMVC:/var/www/MemberSystemMVC
 
   nginx:
-    image: nginx:alpine
+    image: nginx
     container_name: nginx_server
     restart: unless-stopped
     ports:
