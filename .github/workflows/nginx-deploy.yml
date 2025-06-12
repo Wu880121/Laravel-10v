@@ -29,6 +29,9 @@ jobs:
               -p 80:80 \
               -p 443:443 \
               
+              -v /home/ec2-user/laravel-10v:/var/www/laravel-10v-deploy \
+              -v /home/ec2-user/MemberSystemMVC:/var/www/MemberSystemMVC \
+              
               # Laravel 專案掛載
               -v /home/ec2-user/laravel-10v/public:/var/www/laravel-10v/public \
               -v /home/ec2-user/laravel-10v/storage:/var/www/laravel-10v/storage \
