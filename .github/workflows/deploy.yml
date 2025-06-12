@@ -91,18 +91,18 @@ jobs:
             docker run -d --name laravel-app \
               --restart unless-stopped \
               --network laravel-net \
-              -v /home/ec2-user/laravel-10v/storage:/var/www/html/storage \
-              -v /home/ec2-user/laravel-10v/public:/var/www/html/public \
-              -v /home/ec2-user/laravel-10v/.env:/var/www/html/.env \
+              -v /home/ec2-user/laravel-10v/storage:/var/www/storage \
+              -v /home/ec2-user/laravel-10v/public:/var/www/public \
+              -v /home/ec2-user/laravel-10v/.env:/var/www/.env \
               $IMAGE_NAME:$TAG
 
             echo "🔗 建立 storage:link 與修正權限"
-            docker exec laravel-app chown -R www-data:www-data /var/www/html/storage
+            docker exec laravel-app chown -R www-data:www-data /var/www/storage
             docker exec laravel-app php artisan storage:link
             
             echo "🧪 執行 Laravel 初始化指令"
-            docker exec laravel-app chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
-            docker exec laravel-app chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+            docker exec laravel-app chown -R www-data:www-data /var/www/storage /var/www/html/bootstrap/cache
+            docker exec laravel-app chmod -R 775 /var/www/html/storage /var/www/bootstrap/cache
             docker exec laravel-app php artisan key:generate
             docker exec laravel-app php artisan config:cache
             docker exec laravel-app php artisan route:cache
