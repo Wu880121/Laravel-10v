@@ -91,7 +91,6 @@ jobs:
             docker run -d --name laravel-app \
               --restart unless-stopped \
               --network laravel-net \
-              -v /home/ec2-user/laravel-10v/storage:/var/www/laravel-10v \
               -v /home/ec2-user/laravel-10v/storage:/var/www/laravel-10v/storage \
               -v /home/ec2-user/laravel-10v/public:/var/www/laravel-10v/public \
               -v /home/ec2-user/laravel-10v/.env:/var/www/laravel-10v/.env \
