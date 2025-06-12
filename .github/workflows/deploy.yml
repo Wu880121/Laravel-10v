@@ -1,10 +1,9 @@
-name: CI/CD for Laravel + Docker Compose
+name: CI/CD Pipeline for Laravel + Docker Image Deploy
 
 on:
   push:
     branches:
       - main
-  workflow_dispatch:
 
 jobs:
   deploy:
@@ -15,7 +14,7 @@ jobs:
 
     steps:
       - name: ✅ Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       - name: ⏰ Generate Docker Image Tag
         id: tag
@@ -33,53 +32,82 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
-      - name: ⚙️ Install Frontend Dependencies and Build Vite
+      - name: ⚙️ 安裝前端資源並編譯 Vite
         run: |
           npm ci
           npm run build
 
-      - name: 🐳 Build and Push Docker Image
+      - name: 🐳 Build & Push Docker Image
         run: |
           docker build -t $IMAGE_NAME:latest -t $IMAGE_NAME:${{ env.TAG }} .
           docker push $IMAGE_NAME:latest
           docker push $IMAGE_NAME:${{ env.TAG }}
 
-      - name: 🧽 Clean Up EC2 Docker Space
-        uses: appleboy/ssh-action@v1.0.0
+      # ✅ 加上自動清除空間的任務
+      - name: 🧽 Clean Up EC2 Docker Space (Before Deploy)
+        uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
+            echo "⚠️ 清除沒在用的 Docker 資源以釋放磁碟空間..."
             docker system prune -af --volumes || true
+            echo "✅ 已清除 Docker 系統資源"
 
-      - name: 🚀 Deploy with Docker Compose (No git pull)
-        uses: appleboy/ssh-action@v1.0.0
+      - name: 🚀 Deploy to EC2 (PHP + Nginx)
+        uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            cd /home/ec2-user/laravel-10v
+            IMAGE_NAME=${{ env.IMAGE_NAME }}
+            TAG=${{ env.TAG }}
 
-            echo "⛔️ Stopping current containers"
-            docker-compose down
+            echo "📁 建立必要資料夾"
+            mkdir -p /home/ec2-user/laravel-10v/public
+            mkdir -p /home/ec2-user/laravel-10v/storage/app/public
+            mkdir -p /home/ec2-user/laravel-10v/storage/framework/{cache,sessions,views}
+            mkdir -p /home/ec2-user/laravel-10v/storage/logs
+            mkdir -p /home/ec2-user/laravel-10v/nginx
 
-            echo "⚡️ Starting new containers with tag ${{ env.TAG }}"
-            LARAVEL_IMAGE_TAG=${{ env.TAG }} docker-compose up -d
+            echo "🧩 檢查 .env 是否存在"
+            if [ ! -f "/home/ec2-user/laravel-10v/.env" ]; then
+              echo "❌ 缺少 .env 檔案，請先上傳"
+              exit 1
+            fi
 
-            echo "🌁 Laravel Artisan Commands"
-            docker-compose exec laravel-app php artisan storage:link || true
-            docker-compose exec laravel-app php artisan config:cache
-            docker-compose exec laravel-app php artisan route:cache
-            docker-compose exec laravel-app php artisan view:cache
-            docker-compose exec laravel-app php artisan migrate --force || true
+            echo "📥 拉取最新 Laravel Image：$TAG"
+            docker pull $IMAGE_NAME:$TAG
 
-      - name: ❄️ Clean up old images
-        uses: appleboy/ssh-action@v1.0.0
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
+            echo "🧹 停止並移除舊容器"
+            docker stop laravel-app || true
+            docker rm laravel-app || true
+            docker stop nginx-server || true
+            docker rm nginx-server || true
+
+            echo "🐘 啟動 Laravel App 容器（掛載 storage, public, .env）"
+            docker run -d --name laravel-app \
+              --restart unless-stopped \
+              --network laravel-net \
+              -v /home/ec2-user/laravel-10v/storage:/var/www/html/storage \
+              -v /home/ec2-user/laravel-10v/public:/var/www/html/public \
+              -v /home/ec2-user/laravel-10v/.env:/var/www/html/.env \
+              $IMAGE_NAME:$TAG
+
+            echo "🔗 建立 storage:link 與修正權限"
+            docker exec laravel-app chown -R www-data:www-data /var/www/html/storage
+            docker exec laravel-app php artisan storage:link
+            
+            echo "🧪 執行 Laravel 初始化指令"
+            docker exec laravel-app chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+            docker exec laravel-app chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+            docker exec laravel-app php artisan key:generate
+            docker exec laravel-app php artisan config:cache
+            docker exec laravel-app php artisan route:cache
+            docker exec laravel-app php artisan view:cache            
+
+
+            echo "🧽 清除 24 小時前未使用的 image"
             docker image prune -af --filter "until=24h"
