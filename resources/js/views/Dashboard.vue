@@ -409,15 +409,14 @@ export default{
 							const {code, status, message, error_type}= err.response.data;
 							
 							console.log("回傳錯誤內容：", err.response.data);
-                              if (code === 401 && status === false) {
+                              if (code === 401 && status === false && error_type==="not_authentication") {
                                 alert(message);
                                 window.location.href = "/";
                               }
 							  
 							  if(error_type==="is_not_administrator" && code===401 && status===false){
 								  
-								  console.log(message);
-								  alert(message);
+                                 alert(message);
 								  window.location.href = "/";
 							  }
 						}

@@ -9,6 +9,7 @@
 	<div class="input-set">
 	<label for="reset-password-password">請輸入新密碼</label>
 	<input type="password" class="input-set" id="reset-password-password" placeholder="Password">
+	<p style="color:red;">請輸入至少一個大寫跟一個特殊符號</p>
 	</div>
 	
 	<div  class="input-set">

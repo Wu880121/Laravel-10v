@@ -19,6 +19,7 @@
 <div class="flex-wrap">
 <label for="password" class="set-width">密碼</label>
 <input type="password" class="set-width" id="password" placeholder="Password" name="password" required>
+<p style="color:red;" class="set-width">請輸入至少一個大寫跟一個特殊符號</p>
 </div>
 <div class="flex-wrap">
 <label for="checkPassword" class="set-width">確認密碼</label>
