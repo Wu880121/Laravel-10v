@@ -53,7 +53,7 @@ jobs:
           script: |
             docker system prune -af --volumes || true
 
-      - name: 🚀 Deploy with Docker Compose
+      - name: 🚀 Deploy with Docker Compose (No git pull)
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.EC2_HOST }}
@@ -61,9 +61,6 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             cd /home/ec2-user/laravel-10v
-
-            echo "🚑 Pull latest code"
-            git pull origin main
 
             echo "⛔️ Stopping current containers"
             docker-compose down
@@ -77,7 +74,6 @@ jobs:
             docker-compose exec laravel-app php artisan route:cache
             docker-compose exec laravel-app php artisan view:cache
             docker-compose exec laravel-app php artisan migrate --force || true
-
 
       - name: ❄️ Clean up old images
         uses: appleboy/ssh-action@v1.0.0
