@@ -91,9 +91,10 @@ jobs:
             docker run -d --name laravel-app \
               --restart unless-stopped \
               --network laravel-net \
-              -v /home/ec2-user/laravel-10v/storage:/var/www/storage \
-              -v /home/ec2-user/laravel-10v/public:/var/www/public \
-              -v /home/ec2-user/laravel-10v/.env:/var/www/.env \
+              -v /home/ec2-user/laravel-10v/storage:/var/www/laravel-10 \
+              -v /home/ec2-user/laravel-10v/storage:/var/www/laravel-10/storage \
+              -v /home/ec2-user/laravel-10v/public:/var/www/laravel-10/public \
+              -v /home/ec2-user/laravel-10v/.env:/var/www/laravel-10/.env \
               $IMAGE_NAME:$TAG
 
             echo "🔗 建立 storage:link 與修正權限"
