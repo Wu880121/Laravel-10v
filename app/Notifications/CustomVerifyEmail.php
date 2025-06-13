@@ -24,7 +24,7 @@ class CustomVerifyEmail extends BaseVerifyEmail
         );
 
         // 替換為前端驗證頁的連結（用 query string 帶參數）
-        $frontendUrl = 'http://localhost:8080/register_verify_success?redirect=' . urlencode($verifyUrl);
+        $frontendUrl = 'https://easepleasure.keepgoingpiggy.com//register_verify_success?redirect=' . urlencode($verifyUrl);
 
         return (new MailMessage)
             ->subject('請驗證您的 Email')

@@ -101,8 +101,8 @@ jobs:
             docker exec laravel-app php artisan storage:link
             
             echo "🧪 執行 Laravel 初始化指令"
-            docker exec laravel-app chown -R www-data:www-data /var/www/storage /var/www/html/bootstrap/cache
-            docker exec laravel-app chmod -R 775 /var/www/html/storage /var/www/bootstrap/cache
+            docker exec laravel-app chown -R www-data:www-data /var/www/laravel-10v/storage /var/www/laravel-10v/bootstrap/cache
+            docker exec laravel-app chmod -R 775 /var/www/laravel-10v/storage /var/www/laravel-10v/bootstrap/cache            
             docker exec laravel-app php artisan key:generate
             docker exec laravel-app php artisan config:cache
             docker exec laravel-app php artisan route:cache
