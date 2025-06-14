@@ -7,10 +7,13 @@
 
 ## 專案功能:
 -  會員註冊 / 登入（支援 JWT / cookie）
--   使用者角色（Admin / User）
--   後台功能
+-  登入5次失敗鎖帳號
+-  限制寄信時間，避免重複寄信
+-  使用者角色（Admin / User）
+-  後台功能
 -  密碼寄信（PHPMailer + Gmail SMTP）
 -  註冊信箱驗證
+-  重新寄註冊驗證信
 -  前後端分離
 -  使用者圖片上傳
 -  搜尋與分頁功能
@@ -52,4 +55,4 @@
 &nbsp;
 
 ## 備註:
-本專案為自學作品，開發目的為練習 Laravel + Docker + API 架構。
+本專案為自學作品，開發目的為練習 Laravel + Docker + API + Javascript 。
