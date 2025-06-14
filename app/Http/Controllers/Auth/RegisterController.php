@@ -59,7 +59,7 @@ class RegisterController extends Controller
         'status' => true,
         'message' => '註冊成功，並且登入',
         'user' => $user->only(['id', 'email', 'firstname', 'lastname']),
-    ])->cookie
+    ],200)->cookie
 	(
 		 'token',                // cookie 名稱
         $token,                // 寫入 JWT token

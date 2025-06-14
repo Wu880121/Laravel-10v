@@ -22,7 +22,7 @@ class DashboardController extends Controller
 					'code' =>401,
 					'message'=> "沒有權限",
 					'error_type' => "not_authentication",
-			   ]);
+			   ],401);
            }
 		   
 		   $role = auth()->user();
@@ -88,7 +88,7 @@ class DashboardController extends Controller
 				'message' =>"成功",
 				'success_type'=>"success_find",
 				'user' =>$user,
-			]);
+			],200);
 			
 	  }catch(\Throwable $e){
 		  
@@ -100,7 +100,7 @@ class DashboardController extends Controller
 			'status' => false,
 			'code' =>500,
 			'message' =>"發生錯誤",
-		]);
+		],500);
 			}
 	  }
 	  
@@ -141,7 +141,7 @@ class DashboardController extends Controller
 				'code'=>400,
 				'message'=>"更新失敗",
 				'error_type' => "update_error",
-			  ]);
+			  ],400);
 		  }
 		  
 		  
@@ -151,7 +151,7 @@ class DashboardController extends Controller
 				'message'=>"更新成功",
 				'success_type' => "update_success",
 				'user'=>$user,
-		  ]);
+		  ],200);
 		  
 		  }catch(\Throwable $e){
 			  
@@ -188,7 +188,7 @@ class DashboardController extends Controller
 							'code'=>200,
 							'message' =>"刪除成功",
 							'success_type' => 'success_delete',
-						]);
+						],200);
 
 		  }catch(\Throwable $e){
 			  

@@ -109,7 +109,7 @@ class ProfileController extends Controller
 				'code' =>400,
 				"error_type" =>"updat_failed",
 				"message" =>"更新失敗，請重新嘗試",
-			]);	
+			],400);	
 		
 		}else{
 				

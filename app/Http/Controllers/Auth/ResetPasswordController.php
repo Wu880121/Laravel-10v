@@ -30,7 +30,7 @@ class ResetPasswordController extends Controller
 						'status' =>false,
 						'message' => "查無此email，請輸入與註冊時一樣的email",
 						'code' =>404,
-				]);
+				],404);
 			}
 			
 			$record = DB::table('password_reset_tokens')
@@ -53,7 +53,7 @@ class ResetPasswordController extends Controller
                           'status' => false,
                           'message' => "{$minutes}分{$seconds}秒後可嘗試重新寄信",
                           'code' => 429,
-                      ]);
+                      ],429);
                   }
 
 				}
@@ -71,7 +71,7 @@ class ResetPasswordController extends Controller
 					'status' =>true,
 					'message' => "信件已經送出囉，請去收送",
 					'code' =>200,
-				]);
+				],200);
 			 }
 			}catch(\Exception $e){
 			
@@ -81,7 +81,7 @@ class ResetPasswordController extends Controller
 					'status' => false,
 					'message' => "寄信失敗",
 					'code' =>400,
-				]);
+				],400);
 			}
 			  }
 	}
@@ -98,7 +98,7 @@ class ResetPasswordController extends Controller
             'code' => 404,
 			'error_type' =>"NoFoundToken",
             'message' => '此 token 無效或已過期'
-        ]);
+        ],404);
     }
 		
 		 $user = DB::table('users')->where('email', $data['email'])->first();
@@ -109,7 +109,7 @@ class ResetPasswordController extends Controller
                   'code' => 404,
 				  'error_type' =>"NoFoundUser",
                   'message' => '查無此email',
-              ]);
+              ],404);
 		 }
 		 
 		if(Hash::check($data['password'],  $user->password))
@@ -119,7 +119,7 @@ class ResetPasswordController extends Controller
             'code' => 403,
 			'error_type' => 'password_same',
             'message' => '不可與舊的密碼一樣'
-        ]);
+        ],403);
 		}
 		
 		$createdAt = Carbon::parse($record->created_at);
@@ -131,7 +131,7 @@ class ResetPasswordController extends Controller
 				'status' =>false,
 				'message' =>"更改期限已到期，請重新寄信",
 				'code' =>403,
-			]);
+			],403);
 		}
 		
 		$check = 
@@ -158,7 +158,7 @@ class ResetPasswordController extends Controller
 				'status' =>true,
 				'message' => "更改成功",
 				'code' => 200,
-			]);
+			],200);
 		}		
 		
 		
@@ -169,7 +169,7 @@ class ResetPasswordController extends Controller
 				'status' =>false,
 				'message' => "更改失敗，請重新嘗試",
 				'code' => 400,
-			]);
+			],400);
 		    }
 	}
 }

@@ -148,7 +148,7 @@ loginForm.addEventListener('submit', async (e) =>
 			
 			if(role==='admin')
 			{
-				window.location.href='/admin/dashboard';
+				window.location.href='/dashboard';
 			}else{
 				window.location.href='/';
 			}

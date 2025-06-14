@@ -119,7 +119,7 @@ class AuthController extends Controller
 			'code' =>200,
 			'message' => '登入成功!',
 			'user' => $user->only(['id', 'role' , 'firstname' , 'lastname' ]),
-		])->cookie(
+		],200)->cookie(
                'token',                // cookie 名稱
                $token,                // 寫入 JWT token
                $rememberme?60*24*2:60*2,                    // 分鐘數（有效時間）

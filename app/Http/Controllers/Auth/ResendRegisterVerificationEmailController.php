@@ -22,7 +22,7 @@ class ResendRegisterVerificationEmailController extends Controller
 						'status'=>false,
 						'code' =>401,
 						'message'=>'請先登入',
-				   ]);
+				   ],401);
 			   }
 			
 			if($user->hasVerifiedEmail())
@@ -67,7 +67,7 @@ class ResendRegisterVerificationEmailController extends Controller
 			return response()->json([
 				'status' =>true,
 				'message'=>"寄信成功",
-			]);
+			],200);
 			
 			}catch(\Exception $e)
 			 {
