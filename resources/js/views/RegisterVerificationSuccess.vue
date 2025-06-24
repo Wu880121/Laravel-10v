@@ -16,16 +16,18 @@ export default {
 
   name: 'register_verify_success',
 
-  async mounted() {
-    const redirectUrl = new URLSearchParams(window.location.search).get('redirect')
-	
-	const loadingForm = document.getElementById('loading-form');
-	loadingForm.classList.remove('hidden');
+    async mounted() {
+      const redirectUrl = new URLSearchParams(window.location.search).get('redirect')
 
-    if (!redirectUrl) {
-      alert('缺少驗證連結參數')
-      return
+      if (!redirectUrl) {
+        alert('缺少驗證連結參數')
+        return
+      }
+
+      // 這裡改成直接跳轉
+      window.location.href = redirectUrl
     }
+    
 
     try {
       const res = await fetch(redirectUrl, {

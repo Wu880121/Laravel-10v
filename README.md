@@ -17,7 +17,11 @@
 -  限制寄信時間，避免重複寄信
 -  使用者角色（Admin / User）
 -  後台功能
+<<<<<<< HEAD
 -  忘記密碼寄信（PHPMailer + Gmail SMTP）
+=======
+-  密碼寄信（PHPMailer + Gmail SMTP）
+>>>>>>> cabda29 (更新)
 -  註冊信箱驗證
 -  重新寄註冊驗證信
 -  前後端分離
