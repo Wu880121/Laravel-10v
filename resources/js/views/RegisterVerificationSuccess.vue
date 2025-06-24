@@ -16,17 +16,17 @@ export default {
 
   name: 'register_verify_success',
 
-    async mounted() {
-      const redirectUrl = new URLSearchParams(window.location.search).get('redirect')
+async mounted() {
+    const redirectUrl = new URLSearchParams(window.location.search).get('redirect')
 
-      if (!redirectUrl) {
-        alert('缺少驗證連結參數')
-        return
-      }
-
-      // 這裡改成直接跳轉
-      window.location.href = redirectUrl
+    if (!redirectUrl) {
+      alert('缺少驗證連結參數')
+      return
     }
+
+    // 直接轉跳，Laravel 才會幫你寫入 email_verified_at
+    window.location.href = redirectUrl
+  }
     
 
     try {
