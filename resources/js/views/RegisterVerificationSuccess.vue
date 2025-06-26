@@ -13,18 +13,48 @@
 <script>
  import"../../css/RegisterVerificationSuccess.css";
 export default {
+
   name: 'register_verify_success',
 
   async mounted() {
     const redirectUrl = new URLSearchParams(window.location.search).get('redirect')
+	
+	const loadingForm = document.getElementById('loading-form');
+	loadingForm.classList.remove('hidden');
 
     if (!redirectUrl) {
       alert('缺少驗證連結參數')
       return
     }
 
-    window.location.href = redirectUrl
+    try {
+      const res = await fetch(redirectUrl, {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Accept': 'application/json'
+        }
+      })
+
+      const data = await res.json()
+
+      if (res.ok) {
+        alert('✅ 恭喜驗證成功!')
+		loadingForm.classList.add('hidden')
+        setTimeout(() => {
+          window.location.href = '/' 
+       }, 5000)
+      } else {
+        alert('❌ 驗證失敗：' + (data?.message || '未知錯誤'))
+		loadingForm.classList.add('hidden')
+      }
+    } catch (err) {
+      alert('❌ 發生錯誤，請稍後再試')
+	  loadingForm.classList.add('hidden')
+      console.error(err)
+    }finally{
+		loadingForm.classList.add('hidden')
+	}
   }
 }
-
 </script>

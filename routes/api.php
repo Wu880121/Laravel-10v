@@ -53,7 +53,7 @@ Route::get('/verify-email', function (Request $request) {
         event(new Verified($user));
     }
 
-    return response()->json(['message' => 'Email 驗證成功']);
+    return response()->json(['message' => 'Email 驗證成功'],200);
 })->name('api.verify.email');
 
 
